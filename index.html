@@ -153,13 +153,14 @@
       -webkit-backdrop-filter: blur(40px) saturate(180%);
       border: 1px solid rgba(255, 255, 255, 0.15);
       box-shadow: 0 24px 60px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255, 255, 255, 0.15);
-      padding: 44px 40px;
+      padding: 28px 30px;
+      min-height: 0;
       
       /* Layout Horizontal */
       display: flex;
       flex-direction: row;
-      align-items: center;
-      gap: 40px;
+      align-items: flex-start;
+      gap: 30px;
       
       overflow: hidden;
       position: relative;
@@ -262,9 +263,9 @@
       min-width: 0;
       position: relative;
       z-index: 1;
-      padding-left: 24px;
+      padding-left: 18px;
       padding-right: 8px;
-      padding-top: 16px;
+      padding-top: 8px;
     }
 
     .card-right::before {
@@ -335,40 +336,116 @@
       gap: 18px;
       width: 100%;
       max-width: 320px;
-      margin-top: auto; /* empuja los botones hacia abajo */
-      margin-bottom: 18px;
+      margin-top: 24px;
+      margin-bottom: 14px;
     }
 
     /* Botones de conexión: cuadrados con esquinas redondeadas */
     .connection-box {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 56px;
-      height: 56px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      width: 42px;
+      height: 42px;
+      min-width: 42px;
+      min-height: 42px;
+      aspect-ratio: 1 / 1;
+      padding: 0;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.16);
       border-radius: 12px;
       color: rgba(255, 255, 255, 0.92);
-      transition: all 0.28s cubic-bezier(0.25, 0.8, 0.25, 1);
+      transition: transform 0.2s ease, background 0.2s ease;
       text-decoration: none;
       position: relative;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+      overflow: visible;
+      cursor: pointer;
+    }
+
+    .music-control-panel {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+      margin-top: 18px;
+    }
+
+    .music-button-row {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      width: 100%;
+    }
+
+    .music-action {
+      width: 50px;
+      height: 50px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.18s ease, background 0.18s ease;
+    }
+
+    .music-action:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.14);
+    }
+
+    .music-action svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    #track-progress {
+      width: 100%;
+      max-width: 320px;
+      appearance: none;
+      background: rgba(255,255,255,0.1);
+      height: 6px;
+      border-radius: 999px;
+      outline: none;
+    }
+
+    #track-progress::-webkit-slider-thumb,
+    #track-progress::-moz-range-thumb {
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #fff;
+      border: 1px solid rgba(255,255,255,0.4);
+      box-shadow: 0 0 8px rgba(255,255,255,0.32);
+      cursor: pointer;
     }
 
     /* Tira informativa compacta similar a la ordenación solicitada */
     .info-strip {
-      width: 100%;
       display: none; /* oculto por defecto; se mostrará al conectar Discord */
-      gap: 14px;
-      padding: 14px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
+      width: 100%;
+      max-width: 320px;
+      gap: 8px;
+      padding: 12px 16px;
+      min-height: 44px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.14);
       border-radius: 18px;
       align-items: center;
-      justify-content: space-between;
-      margin: 18px 0 6px;
-      backdrop-filter: blur(6px);
+      justify-content: center;
+      margin: 10px 0 8px;
+      backdrop-filter: blur(8px);
+      color: rgba(255,255,255,0.92);
+      font-size: 12px;
+      text-align: center;
+      line-height: 1.2;
+      white-space: nowrap;
     }
     .info-strip.visible { display: flex }
 
@@ -400,20 +477,21 @@
     .connection-box::after {
       content: attr(data-tooltip);
       position: absolute;
-      top: calc(100% + 8px);
+      top: -32px;
       left: 50%;
       transform: translateX(-50%) scale(0.95);
       color: #fff;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(0,0,0,0.75);
+      border: 1px solid rgba(255,255,255,0.12);
       backdrop-filter: blur(10px);
-      padding: 6px 10px;
+      padding: 5px 10px;
       border-radius: 999px;
-      font-size: 12px;
+      font-size: 11px;
       white-space: nowrap;
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 10;
     }
 
     .connection-box:hover::after {
@@ -428,10 +506,17 @@
       box-shadow: 0 10px 20px rgba(0,0,0,0.15);
     }
 
-    .connection-box svg {
+    .connection-box svg,
+    .connection-box img {
       width: 20px;
       height: 20px;
+      display: block;
+      object-fit: contain;
       fill: currentColor;
+    }
+
+    .view-count-badge {
+      display: none;
     }
 
     /* ── Anillo del Avatar ── */
@@ -454,8 +539,8 @@
       background: #080808;
     }
     #avatar-img {
-      width: 120px;
-      height: 120px;
+      width: 96px;
+      height: 96px;
       border-radius: 50%;
       position: relative;
       z-index: 1;
@@ -676,13 +761,11 @@
               <div id="online-dot"></div>
             </div>
             <div id="profile-info">
-              <p id="profile-name">Prince</p>
-              <p class="profile-role">Jugador · Creador · Perfil activo</p>
+              <p id="profile-name" data-original-name="Prince">Prince</p>
+              <div class="info-strip" id="discord-strip" aria-hidden="true"><!-- visible only after Discord connect --></div>
             </div>
             <div id="discord-activity">
-              <p class="status-title">Discord</p>
-              <button id="discord-connect">Conectar con Discord</button>
-              <p class="status-note">Presiona para sincronizar tu perfil y actividad desde Discord.</p>
+              <button id="discord-connect">Conectar</button>
             </div>
           </div>
         </div>
@@ -691,30 +774,34 @@
           <p class="section-title">Conexiones</p>
           <div id="divider"></div>
 
-          <div class="info-strip" id="discord-strip" aria-hidden="true"><!-- visible only after Discord connect --></div>
-
           <div id="connections-row">
-            <a class="connection-box" href="#" target="_blank" title="Discord" data-tooltip="Discord">
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"></svg>
+            <a class="connection-box" href="https://discord.com/users/1501775899971031190" target="_blank" rel="noreferrer" title="Discord" data-tooltip="Discord">
+              <img src="../icons/Discord.png" alt="Discord icon">
             </a>
-            <a class="connection-box" href="#" target="_blank" title="Roblox" data-tooltip="Roblox">
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M5 3h14l-3.5 16H8.5L5 3zm5 5.2l-1 5.2h3.9l1-5.2H10z"/>
-              </svg>
+            <a class="connection-box" href="https://www.roblox.com/es/users/275936594/profile" target="_blank" rel="noreferrer" title="Roblox" data-tooltip="Roblox">
+              <img src="../icons/Roblox.png" alt="Roblox icon">
             </a>
-            <a class="connection-box" href="#" target="_blank" title="Steam" data-tooltip="Steam">
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <circle cx="15.5" cy="8.5" r="2.5"/>
-                <circle cx="7.5" cy="16.5" r="1.8"/>
-                <path d="M6.4 16.8l4.2-1.7c.6.7 1.5 1.1 2.5 1.1 1.9 0 3.5-1.6 3.5-3.5S15 9.2 13.1 9.2c-.7 0-1.4.3-1.9.8L6.4 8.8"/>
-                <path d="M6.4 16.8l3.7 3c1.2.9 3 .7 4.1-.5 1.1-1.2 1.1-3 .1-4.2L9.3 12.8"/>
-              </svg>
+            <a class="connection-box" href="https://steamcommunity.com/profiles/76561199447485191/" target="_blank" rel="noreferrer" title="Steam" data-tooltip="Steam">
+              <img src="../icons/Steam.png" alt="Steam icon">
             </a>
-            <a class="connection-box" href="#" target="_blank" title="GitHub" data-tooltip="GitHub">
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.26.82-.577 0-.285-.01-1.04-.015-2.04-3.338.725-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.757-1.333-1.757-1.09-.745.083-.73.083-.73 1.205.085 1.84 1.235 1.84 1.235 1.07 1.835 2.805 1.305 3.49.997.108-.775.42-1.305.763-1.605-2.665-.305-5.466-1.335-5.466-5.93 0-1.31.47-2.38 1.235-3.22-.125-.305-.535-1.532.115-3.195 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.655 1.663.245 2.89.12 3.195.77.84 1.23 1.91 1.23 3.22 0 4.605-2.805 5.625-5.475 5.92.43.37.82 1.1.82 2.22 0 1.6-.015 2.89-.015 3.28 0 .32.21.695.825.575C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/>
-              </svg>
-            </a>
+            <button class="connection-box" id="view-count-btn" type="button" title="Visitas" data-tooltip="Visitas">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 4.5C7.3 4.5 3.2 7.1 1.5 11.3c1.7 4.2 5.8 6.8 10.5 6.8s8.8-2.6 10.5-6.8C20.8 7.1 16.7 4.5 12 4.5zm0 11c-2.4 0-4.3-1.9-4.3-4.3S9.6 7 12 7s4.3 1.9 4.3 4.3S14.4 15.5 12 15.5zm0-6.5c-1.2 0-2.2 1-2.2 2.2S10.8 13.4 12 13.4s2.2-1 2.2-2.2S13.2 9 12 9z"/></svg>
+              <span class="view-count-badge" id="view-count-badge"></span>
+            </button>
+          </div>
+          <div class="music-control-panel">
+            <div class="music-button-row">
+                  <button class="music-action" id="music-prev" type="button" aria-label="Anterior canción">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15 18V6l-8 6 8 6zM5 6h2v12H5V6z"/></svg>
+              </button>
+              <button class="music-action" id="music-playpause" type="button" aria-label="Reproducir/Pausar">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+              </button>
+              <button class="music-action" id="music-next" type="button" aria-label="Siguiente canción">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 6v12l8-6-8-6zm10 0h2v12h-2V6z"/></svg>
+              </button>
+            </div>
+            <input type="range" id="track-progress" min="0" max="100" value="0" aria-label="Barra de progreso de la música">
           </div>
         </div>
 
@@ -767,6 +854,63 @@
         bgMusic.volume = parseFloat(e.target.value);
       });
 
+      const trackProgress = document.getElementById('track-progress');
+      const musicPrev = document.getElementById('music-prev');
+      const musicPlayPause = document.getElementById('music-playpause');
+      const musicNext = document.getElementById('music-next');
+      const playSvg = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+      const pauseSvg = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 6h4v12H6V6zm8 0h4v12h-4V6z"/></svg>';
+
+      function refreshMusicButton() {
+        if (musicPlayPause) {
+          musicPlayPause.innerHTML = bgMusic.paused ? playSvg : pauseSvg;
+        }
+      }
+
+      function updateTrackProgress() {
+        if (!trackProgress || !bgMusic.duration) return;
+        const percent = Math.round((bgMusic.currentTime / bgMusic.duration) * 100);
+        trackProgress.value = percent;
+      }
+
+      if (bgMusic) {
+        bgMusic.addEventListener('timeupdate', updateTrackProgress);
+        bgMusic.addEventListener('loadedmetadata', updateTrackProgress);
+        bgMusic.addEventListener('play', refreshMusicButton);
+        bgMusic.addEventListener('pause', refreshMusicButton);
+      }
+
+      if (trackProgress) {
+        trackProgress.addEventListener('input', (e) => {
+          if (!bgMusic.duration) return;
+          bgMusic.currentTime = (parseFloat(e.target.value) / 100) * bgMusic.duration;
+        });
+      }
+
+      if (musicPlayPause) {
+        musicPlayPause.addEventListener('click', () => {
+          if (bgMusic.paused) {
+            bgMusic.play().catch(err => console.log(err));
+          } else {
+            bgMusic.pause();
+          }
+        });
+      }
+
+      if (musicPrev) {
+        musicPrev.addEventListener('click', () => {
+          bgMusic.currentTime = Math.max(0, bgMusic.currentTime - 8);
+        });
+      }
+
+      if (musicNext) {
+        musicNext.addEventListener('click', () => {
+          if (!bgMusic.duration) return;
+          bgMusic.currentTime = Math.min(bgMusic.duration, bgMusic.currentTime + 8);
+        });
+      }
+
+      refreshMusicButton();
       updateIcons();
     })();
 
@@ -784,12 +928,57 @@
         }
         const strip = document.getElementById('discord-strip');
         if (strip) {
+          strip.innerHTML = 'Discord conectado';
           strip.classList.add('visible');
           strip.setAttribute('aria-hidden', 'false');
         }
-        discordConnect.textContent = 'Conectado';
-        discordConnect.disabled = true;
+        discordConnect.style.display = 'none';
       });
+    })();
+
+    // ─── Conteo de visitas único por navegador ───
+    (function () {
+      const viewCountBtn = document.getElementById('view-count-btn');
+      const profileName = document.getElementById('profile-name');
+      const viewedKey = 'subpage_browser_viewed';
+      const countKey = 'subpage_view_count';
+
+      function getStoredCount(key) {
+        const stored = localStorage.getItem(key);
+        return stored ? parseInt(stored, 10) || 0 : 0;
+      }
+
+      function setStoredCount(key, value) {
+        localStorage.setItem(key, String(value));
+      }
+
+      function getCountText(count) {
+        return `${count} visita${count === 1 ? '' : 's'}`;
+      }
+
+      if (viewCountBtn && profileName) {
+        const alreadyViewed = localStorage.getItem(viewedKey) === 'true';
+        if (!alreadyViewed) {
+          const nextCount = getStoredCount(countKey) + 1;
+          setStoredCount(countKey, nextCount);
+          localStorage.setItem(viewedKey, 'true');
+        }
+
+        const count = getStoredCount(countKey);
+        const tooltipText = `${count} visita${count === 1 ? '' : 's'}`;
+        viewCountBtn.dataset.tooltip = tooltipText;
+        viewCountBtn.title = tooltipText;
+        viewCountBtn.setAttribute('aria-label', tooltipText);
+
+        viewCountBtn.addEventListener('click', () => {
+          const currentCount = getStoredCount(countKey);
+          const currentTooltip = `${currentCount} visita${currentCount === 1 ? '' : 's'}`;
+          viewCountBtn.dataset.tooltip = currentTooltip;
+          viewCountBtn.title = currentTooltip;
+          viewCountBtn.setAttribute('aria-label', currentTooltip);
+          alert(`Esta página ya ha sido vista en este navegador ${currentCount} veces.`);
+        });
+      }
     })();
 
     // ─── Fondo espacial animado (Canvas) ───
