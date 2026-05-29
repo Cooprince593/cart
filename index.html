@@ -256,7 +256,7 @@
       appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #fff; cursor: pointer;
     }
 
-    /* ── Nuevo Efecto del Avatar (Borde Sólido + Pulso) ── */
+    /* ── Efecto del Avatar (Borde Sólido + Pulso) ── */
     #avatar-wrap { 
       position: relative; 
       width: 100px;
@@ -279,7 +279,6 @@
       transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     
-    /* Animación al pasar el cursor (Hover) */
     #avatar-wrap:hover #avatar-img {
       transform: scale(1.08) rotate(3deg);
     }
@@ -412,7 +411,7 @@
     // Inicializar Íconos de Lucide
     lucide.createIcons();
 
-    // ─── CEREBRO DE MÚSICA CON LA API DE GITHUB ───
+    // ─── CEREBRO DE MÚSICA REPARADO (ORDENADO Y SIN BUGS) ───
     (function () {
       const bgMusic = document.getElementById('bg-music');
       const bgVideo = document.getElementById('bg-video'); 
@@ -427,7 +426,7 @@
       const welcomeOverlay = document.getElementById('welcome-overlay');
 
       let currentPlaylist = [];
-      let currentTrackIndex = 0;
+      let currentTrackIndex = 0; // Guardará el índice exacto de la canción actual
 
       fetch('https://api.github.com/repos/Cooprince593/cart/contents/music')
         .then(response => response.json())
@@ -435,6 +434,7 @@
           if(Array.isArray(data)) {
             currentPlaylist = data.filter(file => file.name.endsWith('.mp3'));
             if (currentPlaylist.length > 0) {
+              // Iniciamos con una canción al azar al cargar la página
               currentTrackIndex = Math.floor(Math.random() * currentPlaylist.length);
               bgMusic.src = currentPlaylist[currentTrackIndex].download_url;
               bgMusic.load(); 
@@ -463,6 +463,22 @@
           if(iconPlay) iconPlay.style.display = 'none';
           if(iconPause) iconPause.style.display = 'block';
         }
+      }
+
+      // Reproducir siguiente pista de forma lineal
+      function playNextTrack() {
+        if (currentPlaylist.length === 0) return;
+        currentTrackIndex = (currentTrackIndex + 1) % currentPlaylist.length; // Avanza 1, si llega al final vuelve a 0
+        bgMusic.src = currentPlaylist[currentTrackIndex].download_url;
+        bgMusic.play().catch(err => console.log(err));
+      }
+
+      // Reproducir pista anterior de forma lineal
+      function playPrevTrack() {
+        if (currentPlaylist.length === 0) return;
+        currentTrackIndex = (currentTrackIndex - 1 + currentPlaylist.length) % currentPlaylist.length; // Retrocede 1
+        bgMusic.src = currentPlaylist[currentTrackIndex].download_url;
+        bgMusic.play().catch(err => console.log(err));
       }
 
       bgMusic.addEventListener('play', () => { updateIcons(); refreshMusicButton(); });
@@ -505,12 +521,9 @@
           trackProgress.value = Math.round((bgMusic.currentTime / bgMusic.duration) * 100);
         });
         
+        // Cuando termina una canción, pasa a la siguiente
         bgMusic.addEventListener('ended', () => {
-           if(currentPlaylist.length > 0) {
-             currentTrackIndex = Math.floor(Math.random() * currentPlaylist.length);
-             bgMusic.src = currentPlaylist[currentTrackIndex].download_url;
-             bgMusic.play();
-           }
+           playNextTrack();
         });
       }
 
@@ -530,17 +543,19 @@
 
       if (musicNext) {
         musicNext.addEventListener('click', () => {
-          if (currentPlaylist.length > 0) {
-            currentTrackIndex = Math.floor(Math.random() * currentPlaylist.length);
-            bgMusic.src = currentPlaylist[currentTrackIndex].download_url;
-            bgMusic.play();
-          }
+          playNextTrack();
         });
       }
 
       if (musicPrev) {
         musicPrev.addEventListener('click', () => {
-          bgMusic.currentTime = 0;
+          // Si han pasado más de 3 segundos, reiniciar la canción actual
+          if (bgMusic.currentTime > 3) {
+            bgMusic.currentTime = 0;
+          } else {
+            // Si acaba de empezar, ir a la canción anterior
+            playPrevTrack();
+          }
         });
       }
 
