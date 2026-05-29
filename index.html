@@ -4,9 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>凹</title>
+  <title>Prince</title>
   <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/Cooprince593/cart/main/icons/white-flower.png" />
   
+  <script src="https://unpkg.com/lucide@latest"></script>
+
   <style>
     /* ── Rutas de fuente Demonized asegurada ── */
     @font-face {
@@ -39,7 +41,7 @@
       position: relative;
     }
 
-    /* ── Fondo de Video Dinámico ── */
+    /* ── Fondo de Video Dinámico Reparado ── */
     #bg-video {
       position: fixed;
       top: 0; left: 0;
@@ -52,7 +54,6 @@
       transition: filter 0.8s ease-in-out;
     }
 
-    /* Clase que aplica el blur del 5% al video cuando se entra a la página */
     body.is-blurred #bg-video {
       filter: blur(5px);
     }
@@ -149,33 +150,29 @@
 
     @media (max-width: 600px) {
       #card { flex-direction: column; padding: 36px 22px; gap: 20px; }
-      .card-left { flex-direction: column; align-items: center; text-align: center; width: 100%; }
-      #profile-info { align-items: center; }
-      .card-right { border-left: none !important; padding-left: 0 !important; width: 100%; }
+      .card-left { width: 100%; justify-content: center; }
+      .card-right { padding-left: 0 !important; width: 100%; }
     }
 
     #card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 15%; right: 15%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-      border-radius: 999px;
-      pointer-events: none;
+      content: ''; position: absolute; top: 0; left: 15%; right: 15%;
+      height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      border-radius: 999px; pointer-events: none;
     }
 
     .card-rose { position: absolute; width: 120px; opacity: 0.15; pointer-events: none; }
     .card-rose-tl { top: -18px; left: -22px; transform: rotate(-20deg); }
     .card-rose-br { bottom: -18px; right: -22px; transform: rotate(160deg); }
 
-    /* ── Columnas ── */
+    /* ── Columnas: Avatar Izquierda / Nombre Derecha ── */
     .card-left {
-      display: flex; flex-direction: row; align-items: center; text-align: left;
-      gap: 18px; position: relative; z-index: 1; min-width: 240px;
+      display: flex; flex-direction: row; align-items: center; justify-content: center;
+      position: relative; z-index: 1; min-width: 240px;
     }
 
-    #avatar-column { display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; }
-    #profile-info { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px; }
+    #avatar-column { display: flex; flex-direction: row; align-items: center; gap: 18px; width: 100%; justify-content: center; }
+    
+    #profile-info { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
 
     #profile-name {
       margin: 0;
@@ -186,7 +183,6 @@
       white-space: nowrap;
     }
 
-    /* Alineación centrada tras quitar el título 凹 */
     .card-right {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       flex: 1; min-width: 0; position: relative; z-index: 1; padding-left: 14px; padding-right: 4px; padding-top: 4px;
@@ -196,17 +192,6 @@
       content: ''; position: absolute; top: 12%; bottom: 12%; left: 0px; width: 1px;
       border-radius: 999px; background: linear-gradient(180deg, transparent, rgba(255,255,255,0.25), transparent);
     }
-
-    #discord-activity { margin-top: 12px; text-align: center; }
-
-    /* Estilos adaptados para la etiqueta <a> del OAuth */
-    #discord-connect {
-      margin-top: 6px; padding: 10px 16px; border-radius: 999px; font-family: inherit;
-      border: 1px solid rgba(255,255,255,0.16); background: rgba(255,255,255,0.08);
-      color: #fff; cursor: pointer; transition: all 0.25s ease; backdrop-filter: blur(10px);
-      text-decoration: none; display: inline-block;
-    }
-    #discord-connect:hover { background: rgba(255,255,255,0.16); transform: translateY(-1px); }
 
     #connections-row {
       display: flex; justify-content: center; flex-wrap: nowrap; gap: 16px;
@@ -221,15 +206,13 @@
       text-decoration: none; position: relative; box-shadow: 0 8px 18px rgba(0,0,0,0.18); cursor: pointer;
     }
     .connection-box:hover { background: rgba(255, 255, 255, 0.08); color: #fff; transform: translateY(-3px); }
-    .connection-box svg, .connection-box img { width: 20px; height: 20px; object-fit: contain; }
+    .connection-box img { width: 20px; height: 20px; object-fit: contain; }
 
-    /* Fuente Demonized Font añadida a los carteles flotantes (tooltips) */
     .connection-box::after {
       content: attr(data-tooltip); position: absolute; top: -32px; left: 50%;
       transform: translateX(-50%) scale(0.95); color: #fff; background: rgba(0,0,0,0.75);
       padding: 5px 10px; border-radius: 999px; font-size: 11px; opacity: 0; pointer-events: none;
-      transition: opacity 0.2s ease, transform 0.2s ease; z-index: 10; 
-      font-family: 'Demonized Font', system-ui, sans-serif !important;
+      transition: opacity 0.2s ease, transform 0.2s ease; z-index: 10; font-family: 'Demonized Font', system-ui, sans-serif !important;
     }
     .connection-box:hover::after { opacity: 1; transform: translateX(-50%) scale(1); }
 
@@ -242,7 +225,7 @@
       justify-content: center; cursor: pointer; transition: transform 0.18s ease, background 0.18s ease;
     }
     .music-action:hover { transform: translateY(-2px); background: rgba(255,255,255,0.14); }
-    .music-action svg { width: 18px; height: 18px; fill: currentColor; }
+    .music-action svg { width: 20px; height: 20px; color: currentColor; }
 
     #track-progress {
       width: 100%; max-width: 320px; appearance: none; background: rgba(255,255,255,0.1);
@@ -255,7 +238,6 @@
     /* ── Anillo del Avatar ── */
     #avatar-wrap { 
       position: relative; 
-      margin-bottom: 14px;
       width: 96px;
       height: 96px;
       display: flex;
@@ -304,20 +286,10 @@
       border-radius: 30px; padding: 6px; z-index: 100; backdrop-filter: blur(20px);
     }
     #music-toggle { 
-      background: transparent; 
-      border: none; 
-      color: #fff; 
-      width: 34px; 
-      height: 34px; 
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
+      background: transparent; border: none; color: #fff; width: 34px; height: 34px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; padding: 0;
     }
-    #music-toggle svg {
-       display: block;
-    }
+    #music-toggle svg { width: 18px; height: 18px; display: block; }
     #volume-slider { width: 0; opacity: 0; appearance: none; height: 4px; background: rgba(255, 255, 255, 0.2); transition: all 0.3s ease; }
     #music-container:hover #volume-slider { width: 85px; opacity: 1; margin-left: 10px; margin-right: 6px; pointer-events: auto; }
     #volume-slider::-webkit-slider-thumb { appearance: none; width: 12px; height: 12px; border-radius: 50%; background: #fff; }
@@ -342,15 +314,8 @@
 
   <div id="music-container">
     <button id="music-toggle" aria-label="Reproducir música">
-      <svg id="icon-muted" style="display: none;" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-        <line x1="23" y1="9" x2="17" y2="15"></line>
-        <line x1="17" y1="9" x2="23" y2="15"></line>
-      </svg>
-      <svg id="icon-playing" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-      </svg>
+      <i data-lucide="volume-x" id="icon-muted" style="display: none;"></i>
+      <i data-lucide="volume-2" id="icon-playing"></i>
     </button>
     <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.5" aria-label="Control de volumen">
   </div>
@@ -376,9 +341,6 @@
             <div id="profile-info">
               <p id="profile-name">Prince</p>
             </div>
-            <div id="discord-activity">
-              <a id="discord-connect" href="https://b568f68c-e843-40fd-a5c7-b70f0d3cdfd0-00-28p9k16frwf0j.janeway.replit.dev/api/auth/discord/callback">Conectar</a>
-            </div>
           </div>
         </div>
 
@@ -402,13 +364,14 @@
           <div class="music-control-panel">
             <div class="music-button-row">
               <button class="music-action" id="music-prev">
-                <svg viewBox="0 0 24 24"><path d="M15 18V6l-8 6 8 6zM5 6h2v12H5V6z"/></svg>
+                <i data-lucide="skip-back"></i>
               </button>
               <button class="music-action" id="music-playpause">
-                <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                <i data-lucide="play" id="icon-play"></i>
+                <i data-lucide="pause" id="icon-pause" style="display: none;"></i>
               </button>
               <button class="music-action" id="music-next">
-                <svg viewBox="0 0 24 24"><path d="M4 6v12l8-6-8-6zm10 0h2v12h-2V6z"/></svg>
+                <i data-lucide="skip-forward"></i>
               </button>
             </div>
             <input type="range" id="track-progress" min="0" max="100" value="0">
@@ -420,14 +383,49 @@
   </div>
 
   <script>
+    // Inicializar Íconos de Lucide
+    lucide.createIcons();
+
+    // ─── LÓGICA DEL CONTADOR DE VISITAS MEJORADA ───
+    (function () {
+      const viewBtn = document.getElementById('view-count-btn');
+      if (!viewBtn) return;
+
+      const hasVisited = localStorage.getItem('visited_cooprince_cart');
+      
+      const apiUrl = hasVisited 
+        ? 'https://api.counterapi.dev/v1/cooprince593-cart/visitas' 
+        : 'https://api.counterapi.dev/v1/cooprince593-cart/visitas/up';
+
+      fetch(apiUrl, { mode: 'cors' })
+        .then(response => {
+          if (!response.ok) throw new Error("Error en la respuesta del contador.");
+          return response.json();
+        })
+        .then(data => {
+          if (data && data.count !== undefined) {
+            viewBtn.setAttribute('data-tooltip', `Visitas: ${data.count}`);
+            if (!hasVisited) localStorage.setItem('visited_cooprince_cart', 'true');
+          }
+        })
+        .catch(err => {
+          console.warn("Contador bloqueado por el navegador (AdBlock o GitHub Pages CORS):", err);
+          viewBtn.setAttribute('data-tooltip', `Visitas: ?`);
+        });
+    })();
+
     // ─── CEREBRO DE MÚSICA CON LA API DE GITHUB ───
     (function () {
       const bgMusic = document.getElementById('bg-music');
-      const bgVideo = document.getElementById('bg-video');
+      const bgVideo = document.getElementById('bg-video'); // <-- Integración del video activada en el click
       const musicBtn = document.getElementById('music-toggle');
       const volumeSlider = document.getElementById('volume-slider');
+      
       const iconMuted = document.getElementById('icon-muted');
       const iconPlaying = document.getElementById('icon-playing');
+      const iconPlay = document.getElementById('icon-play');
+      const iconPause = document.getElementById('icon-pause');
+      
       const welcomeOverlay = document.getElementById('welcome-overlay');
 
       let currentPlaylist = [];
@@ -441,7 +439,6 @@
         .then(data => {
           if(Array.isArray(data)) {
             currentPlaylist = data.filter(file => file.name.endsWith('.mp3'));
-            
             if (currentPlaylist.length > 0) {
               currentTrackIndex = Math.floor(Math.random() * currentPlaylist.length);
               bgMusic.src = currentPlaylist[currentTrackIndex].download_url;
@@ -455,29 +452,39 @@
 
       function updateIcons() {
         if (!bgMusic.paused && bgMusic.volume > 0) {
-          iconMuted.style.display = 'none';
-          iconPlaying.style.display = 'block';
+          if(iconMuted) iconMuted.style.display = 'none';
+          if(iconPlaying) iconPlaying.style.display = 'block';
         } else {
-          iconMuted.style.display = 'block';
-          iconPlaying.style.display = 'none';
+          if(iconMuted) iconMuted.style.display = 'block';
+          if(iconPlaying) iconPlaying.style.display = 'none';
         }
       }
 
-      bgMusic.addEventListener('play', updateIcons);
-      bgMusic.addEventListener('pause', updateIcons);
+      function refreshMusicButton() {
+        if (bgMusic.paused) {
+          if(iconPlay) iconPlay.style.display = 'block';
+          if(iconPause) iconPause.style.display = 'none';
+        } else {
+          if(iconPlay) iconPlay.style.display = 'none';
+          if(iconPause) iconPause.style.display = 'block';
+        }
+      }
+
+      bgMusic.addEventListener('play', () => { updateIcons(); refreshMusicButton(); });
+      bgMusic.addEventListener('pause', () => { updateIcons(); refreshMusicButton(); });
       bgMusic.addEventListener('volumechange', updateIcons);
 
       welcomeOverlay.addEventListener('click', () => {
         document.body.classList.add('is-blurred');
-
+        
+        // Reproducir video al hacer clic
         if (bgVideo) {
           bgVideo.play().catch(err => console.log("Video no pudo reproducirse automáticamente:", err));
         }
 
-        bgMusic.play().catch(err => console.log("El navegador bloqueó o aún está cargando la música:", err));
-        
+        bgMusic.play().catch(err => console.log("Música bloqueada:", err));
         welcomeOverlay.classList.add('fade-out');
-        updateIcons();
+        
         setTimeout(() => {
           document.getElementById('center').classList.add('card-visible');
         }, 650);
@@ -497,21 +504,12 @@
       const musicPlayPause = document.getElementById('music-playpause');
       const musicNext = document.getElementById('music-next');
       const musicPrev = document.getElementById('music-prev');
-      
-      const playSvg = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
-      const pauseSvg = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h4v12H6V6zm8 0h4v12h-4V6z"/></svg>';
-
-      function refreshMusicButton() {
-        if (musicPlayPause) musicPlayPause.innerHTML = bgMusic.paused ? playSvg : pauseSvg;
-      }
 
       if (bgMusic) {
         bgMusic.addEventListener('timeupdate', () => {
           if (!bgMusic.duration) return;
           trackProgress.value = Math.round((bgMusic.currentTime / bgMusic.duration) * 100);
         });
-        bgMusic.addEventListener('play', refreshMusicButton);
-        bgMusic.addEventListener('pause', refreshMusicButton);
         
         bgMusic.addEventListener('ended', () => {
            if(currentPlaylist.length > 0) {
@@ -576,37 +574,6 @@
         cancelAnimationFrame(raf);
         card.style.transform  = 'rotateX(0deg) rotateY(0deg) scale(1)';
       });
-    })();
-
-    // ─── SCRIPT DEL CONTADOR DE VISITAS ÚNICAS (NUEVO) ───
-    (function () {
-      const viewBtn = document.getElementById('view-count-btn');
-      if (!viewBtn) return;
-
-      // Revisa en la memoria del navegador si ya visitó la página
-      const hasVisited = localStorage.getItem('visited_cooprince593');
-      
-      // Si ya visitó, solo consultamos el número. Si es nuevo, usamos '/up' para sumar 1.
-      const apiUrl = hasVisited 
-        ? 'https://api.counterapi.dev/v1/cooprince593_cart/visitas' 
-        : 'https://api.counterapi.dev/v1/cooprince593_cart/visitas/up';
-
-      fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-          if (data && data.count !== undefined) {
-            viewBtn.setAttribute('data-tooltip', `Visitas: ${data.count}`);
-            
-            // Si es su primera visita, guardamos el recuerdo para que no vuelva a sumar al refrescar
-            if (!hasVisited) {
-              localStorage.setItem('visited_cooprince593', 'true');
-            }
-          }
-        })
-        .catch(err => {
-          console.error("Error al obtener visitas:", err);
-          viewBtn.setAttribute('data-tooltip', `Visitas: Error`);
-        });
     })();
   </script>
 </body>
