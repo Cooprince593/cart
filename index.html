@@ -39,7 +39,7 @@
       position: relative;
     }
 
-    /* ── Fondo de Video ── */
+    /* ── Fondo de Video Sin Lag ── */
     #bg-video {
       position: fixed;
       top: 0; left: 0;
@@ -135,12 +135,10 @@
       position: relative;
     }
 
-    /* ── Tarjeta ── */
+    /* ── Tarjeta (SIN BLUR PARA EVITAR LAG) ── */
     #card {
       border-radius: 24px;
-      background: rgba(255, 255, 255, 0.07);
-      backdrop-filter: blur(25px) saturate(180%);
-      -webkit-backdrop-filter: blur(25px) saturate(180%);
+      background: rgba(15, 15, 15, 0.9); /* Fondo oscuro liso */
       border: 1px solid rgba(255, 255, 255, 0.15);
       box-shadow: 0 24px 60px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255, 255, 255, 0.15);
       padding: 38px 30px; 
@@ -176,23 +174,6 @@
     
     #profile-info { display: flex; flex-direction: column; justify-content: center; align-items: center; }
 
-    /* Decoración de nombre con las flores */
-    .name-container {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .name-flower {
-      width: 26px;
-      height: 26px;
-      object-fit: contain;
-      filter: drop-shadow(0 0 5px rgba(255,255,255,0.4));
-      animation: spin-slow 8s linear infinite;
-    }
-
-    .left-flower { animation-direction: reverse; }
-
     #profile-name {
       margin: 0;
       color: rgba(255,255,255,0.95);
@@ -212,6 +193,16 @@
     .card-right::before {
       content: ''; position: absolute; top: 12%; bottom: 12%; left: 0px; width: 1px;
       border-radius: 999px; background: linear-gradient(180deg, transparent, rgba(255,255,255,0.25), transparent);
+    }
+
+    /* Flor central encima de las conexiones */
+    .center-flower {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 0 6px rgba(255,255,255,0.3));
+      animation: spin-slow 10s linear infinite;
     }
 
     #connections-row {
@@ -293,11 +284,11 @@
       z-index: 3; 
     }
 
-    /* ── Control de Música Superior ── */
+    /* ── Control de Música Superior (SIN BLUR) ── */
     #music-container {
       position: fixed; top: 24px; left: 24px; display: flex; align-items: center;
-      background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 30px; padding: 6px; z-index: 100; backdrop-filter: blur(20px);
+      background: rgba(15, 15, 15, 0.9); border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 30px; padding: 6px; z-index: 100;
     }
     #music-toggle { 
       background: transparent; border: none; color: #fff; width: 34px; height: 34px; cursor: pointer;
@@ -335,7 +326,7 @@
     <img id="welcome-rose-loading" src="https://raw.githubusercontent.com/Cooprince593/cart/main/icons/white-flower.png" alt="Cargando..." />
   </div>
 
-  <audio id="bg-music" crossorigin="anonymous"></audio>
+  <audio id="bg-music"></audio>
 
   <div id="music-container">
     <button id="music-toggle" aria-label="Reproducir música">
@@ -363,17 +354,15 @@
             </div>
             
             <div id="profile-info">
-              <div class="name-container">
-                <img src="https://raw.githubusercontent.com/Cooprince593/cart/main/icons/white-flower.png" class="name-flower left-flower" alt="Flor Decorativa">
-                <p id="profile-name">Prince</p>
-                <img src="https://raw.githubusercontent.com/Cooprince593/cart/main/icons/white-flower.png" class="name-flower right-flower" alt="Flor Decorativa">
-              </div>
+              <p id="profile-name">Prince</p>
             </div>
           </div>
         </div>
 
         <div class="card-right">
           
+          <img class="center-flower" src="https://raw.githubusercontent.com/Cooprince593/cart/main/icons/white-flower.png" alt="Flor Decorativa">
+
           <div id="connections-row">
             <a class="connection-box" href="https://discord.com/users/1501775899971031190" target="_blank" data-tooltip="Discord">
               <img src="https://raw.githubusercontent.com/Cooprince593/cart/main/icons/Discord.png" alt="Discord">
@@ -408,10 +397,8 @@
   </div>
 
   <script>
-    // Inicializar Íconos de Lucide
     lucide.createIcons();
 
-    // ─── CEREBRO DE MÚSICA REPARADO (ORDENADO Y SIN BUGS) ───
     (function () {
       const bgMusic = document.getElementById('bg-music');
       const bgVideo = document.getElementById('bg-video'); 
@@ -426,7 +413,7 @@
       const welcomeOverlay = document.getElementById('welcome-overlay');
 
       let currentPlaylist = [];
-      let currentTrackIndex = 0; // Guardará el índice exacto de la canción actual
+      let currentTrackIndex = 0; 
 
       fetch('https://api.github.com/repos/Cooprince593/cart/contents/music')
         .then(response => response.json())
@@ -434,7 +421,6 @@
           if(Array.isArray(data)) {
             currentPlaylist = data.filter(file => file.name.endsWith('.mp3'));
             if (currentPlaylist.length > 0) {
-              // Iniciamos con una canción al azar al cargar la página
               currentTrackIndex = Math.floor(Math.random() * currentPlaylist.length);
               bgMusic.src = currentPlaylist[currentTrackIndex].download_url;
               bgMusic.load(); 
@@ -465,25 +451,40 @@
         }
       }
 
-      // Reproducir siguiente pista de forma lineal
-      function playNextTrack() {
+      function playSpecificTrack(index) {
         if (currentPlaylist.length === 0) return;
-        currentTrackIndex = (currentTrackIndex + 1) % currentPlaylist.length; // Avanza 1, si llega al final vuelve a 0
+        currentTrackIndex = index;
+        
         bgMusic.src = currentPlaylist[currentTrackIndex].download_url;
-        bgMusic.play().catch(err => console.log(err));
+        bgMusic.currentTime = 0;
+        bgMusic.load(); 
+        
+        const playPromise = bgMusic.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(err => console.log("La reproducción falló: ", err));
+        }
       }
 
-      // Reproducir pista anterior de forma lineal
+      function playNextTrack() {
+        if (currentPlaylist.length === 0) return;
+        const nextIndex = (currentTrackIndex + 1) % currentPlaylist.length; 
+        playSpecificTrack(nextIndex);
+      }
+
       function playPrevTrack() {
         if (currentPlaylist.length === 0) return;
-        currentTrackIndex = (currentTrackIndex - 1 + currentPlaylist.length) % currentPlaylist.length; // Retrocede 1
-        bgMusic.src = currentPlaylist[currentTrackIndex].download_url;
-        bgMusic.play().catch(err => console.log(err));
+        const prevIndex = (currentTrackIndex - 1 + currentPlaylist.length) % currentPlaylist.length; 
+        playSpecificTrack(prevIndex);
       }
 
       bgMusic.addEventListener('play', () => { updateIcons(); refreshMusicButton(); });
       bgMusic.addEventListener('pause', () => { updateIcons(); refreshMusicButton(); });
       bgMusic.addEventListener('volumechange', updateIcons);
+      
+      bgMusic.addEventListener('error', () => {
+         console.warn("Se detectó un error en el audio. Pasando a la siguiente pista automáticamente...");
+         setTimeout(() => playNextTrack(), 500);
+      });
 
       welcomeOverlay.addEventListener('click', () => {
         document.body.classList.add('is-blurred');
@@ -492,7 +493,11 @@
           bgVideo.play().catch(err => console.log("Video no pudo reproducirse automáticamente:", err));
         }
 
-        bgMusic.play().catch(err => console.log("Música bloqueada:", err));
+        const playPromise = bgMusic.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(err => console.log("Música bloqueada:", err));
+        }
+        
         welcomeOverlay.classList.add('fade-out');
         
         setTimeout(() => {
@@ -521,7 +526,6 @@
           trackProgress.value = Math.round((bgMusic.currentTime / bgMusic.duration) * 100);
         });
         
-        // Cuando termina una canción, pasa a la siguiente
         bgMusic.addEventListener('ended', () => {
            playNextTrack();
         });
@@ -549,11 +553,10 @@
 
       if (musicPrev) {
         musicPrev.addEventListener('click', () => {
-          // Si han pasado más de 3 segundos, reiniciar la canción actual
           if (bgMusic.currentTime > 3) {
             bgMusic.currentTime = 0;
+            bgMusic.play().catch(e => console.log(e));
           } else {
-            // Si acaba de empezar, ir a la canción anterior
             playPrevTrack();
           }
         });
@@ -561,7 +564,6 @@
 
     })();
 
-    // ─── EFECTO 3D EN LA TARJETA ───
     (function () {
       const wrap = document.getElementById('card-wrap');
       const card = document.getElementById('card');
