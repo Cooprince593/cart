@@ -12,6 +12,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   
   <style>
+    @font-face {
+      font-family: 'Old English Five';
+      src: url('https://raw.githubusercontent.com/Cooprince593/Space/main/Old%20English%20Five.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Demonized Font';
+      src: url('https://raw.githubusercontent.com/Cooprince593/Space/main/Demonized.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
     /* ── Reset básico ── */
     *, *::before, *::after { 
       box-sizing: border-box; 
@@ -22,7 +36,7 @@
     body {
       font-family: 'Inter', system-ui, sans-serif;
       overflow: hidden;
-      background: #000;
+      background: rgba(0, 0, 0, 0.75);
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -33,7 +47,7 @@
     #welcome-overlay {
       position: fixed;
       inset: 0;
-      background: #050505;
+      background: rgba(0,0,0,0.75);
       z-index: 9999;
       display: flex;
       flex-direction: column;
@@ -49,42 +63,35 @@
       pointer-events: none;
     }
 
-    #welcome-rose {
+    #welcome-rose-loading {
       width: 90px;
-      opacity: 0.5;
-      margin-bottom: 30px;
-      animation: pulseRose 2.5s ease-in-out infinite;
-      filter: drop-shadow(0 0 15px rgba(255,255,255,0.1));
+      height: 90px;
+      object-fit: contain;
+      animation: pulseRose 2s infinite ease-in-out;
     }
 
-    #welcome-btn {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: #fff;
-      padding: 16px 44px;
-      border-radius: 99px;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      transition: all 0.3s ease;
+    #bg-video {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.55s ease;
+      pointer-events: none;
+      z-index: 0;
+      background: #000;
     }
 
-    #welcome-overlay:hover #welcome-btn {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.3);
-      transform: translateY(-2px);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+    #bg-video.visible {
+      opacity: 1;
     }
 
-    #welcome-caption {
-      color: rgba(255,255,255,0.3);
-      font-size: 11px;
-      margin-top: 16px;
-      letter-spacing: 0.05em;
+    #welcome-btn,
+    #welcome-rose,
+    #welcome-caption,
+    #welcome-message {
+      display: none;
     }
 
     /* ── Canvas Espacial ── */
@@ -94,7 +101,7 @@
       width: 100%;
       height: 100%;
       pointer-events: none;
-      z-index: 0;
+      z-index: -1;
     }
 
     /* ── Estrellas Fugaces ── */
@@ -135,13 +142,26 @@
       align-items: center;
       justify-content: center;
       padding: 24px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(18px) scale(0.98);
+      transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+      pointer-events: none;
+    }
+
+    /* When this class is added the card/container becomes visible with animation */
+    #center.card-visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
     }
 
     #card-wrap {
       animation: float 7s ease-in-out infinite, fadeInUp 0.85s cubic-bezier(.16,1,.3,1) both;
       perspective: 1200px;
-      /* Ajustamos el ancho para que la tarjeta sea horizontal */
-      width: min(92vw, 650px);
+      /* Tarjeta un poco más pequeña y estilizada */
+      width: min(90vw, 560px);
       position: relative;
     }
 
@@ -153,14 +173,14 @@
       -webkit-backdrop-filter: blur(40px) saturate(180%);
       border: 1px solid rgba(255, 255, 255, 0.15);
       box-shadow: 0 24px 60px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255, 255, 255, 0.15);
-      padding: 28px 30px;
+      padding: 22px 26px;
       min-height: 0;
       
       /* Layout Horizontal */
       display: flex;
       flex-direction: row;
       align-items: flex-start;
-      gap: 30px;
+      gap: 24px;
       
       overflow: hidden;
       position: relative;
@@ -173,13 +193,14 @@
     @media (max-width: 600px) {
       #card {
         flex-direction: column;
-        padding: 34px 24px;
-        gap: 24px;
+        padding: 30px 22px;
+        gap: 20px;
       }
       .card-left {
         flex-direction: column;
         align-items: center;
         text-align: center;
+        width: 100%;
       }
       #profile-info {
         align-items: center;
@@ -219,14 +240,14 @@
       gap: 18px;
       position: relative;
       z-index: 1;
-      min-width: 260px;
+      min-width: 240px;
     }
 
     #avatar-column {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 18px;
+      gap: 14px;
       width: 100%;
     }
 
@@ -241,8 +262,9 @@
     #profile-name {
       margin: 0;
       color: rgba(255,255,255,0.95);
-      font-size: 32px;
-      font-weight: 800;
+      font-size: 28px;
+      font-family: 'Demonized Font', 'Inter', system-ui, sans-serif;
+      font-weight: 400;
       letter-spacing: 0.02em;
       white-space: nowrap;
     }
@@ -263,9 +285,9 @@
       min-width: 0;
       position: relative;
       z-index: 1;
-      padding-left: 18px;
-      padding-right: 8px;
-      padding-top: 8px;
+      padding-left: 14px;
+      padding-right: 4px;
+      padding-top: 4px;
     }
 
     .card-right::before {
@@ -273,14 +295,14 @@
       position: absolute;
       top: 12%;
       bottom: 12%;
-      left: 6px;
+      left: 0px;
       width: 1px;
       border-radius: 999px;
       background: linear-gradient(180deg, transparent, rgba(255,255,255,0.25), transparent);
     }
 
     #discord-activity {
-      margin-top: 16px;
+      margin-top: 12px;
       text-align: center;
       color: rgba(209,213,219,0.8);
       font-size: 13px;
@@ -295,13 +317,8 @@
       font-size: 14px;
     }
 
-    #discord-activity .status-user,
-    #discord-activity .status-id {
-      margin: 0;
-    }
-
     #discord-connect {
-      margin-top: 10px;
+      margin-top: 6px;
       padding: 10px 16px;
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,0.16);
@@ -322,33 +339,26 @@
       transform: translateY(0);
     }
 
-    .status-note {
-      margin: 10px 0 0;
-      color: rgba(209,213,219,0.72);
-      font-size: 12px;
-      text-align: center;
-    }
-
     #connections-row {
       display: flex;
       justify-content: center;
       flex-wrap: nowrap;
-      gap: 18px;
+      gap: 16px;
       width: 100%;
       max-width: 320px;
-      margin-top: 24px;
+      margin-top: 14px;
       margin-bottom: 14px;
     }
 
-    /* Botones de conexión: cuadrados con esquinas redondeadas */
+    /* Botones de conexión */
     .connection-box {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 42px;
-      height: 42px;
-      min-width: 42px;
-      min-height: 42px;
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      min-height: 40px;
       aspect-ratio: 1 / 1;
       padding: 0;
       background: rgba(255, 255, 255, 0.1);
@@ -369,7 +379,7 @@
       flex-direction: column;
       gap: 12px;
       align-items: center;
-      margin-top: 18px;
+      margin-top: 14px;
     }
 
     .music-button-row {
@@ -380,9 +390,9 @@
     }
 
     .music-action {
-      width: 50px;
-      height: 50px;
-      border-radius: 16px;
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
       border: 1px solid rgba(255,255,255,0.18);
       background: rgba(255,255,255,0.08);
       color: #fff;
@@ -399,8 +409,8 @@
     }
 
     .music-action svg {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       fill: currentColor;
     }
 
@@ -426,9 +436,9 @@
       cursor: pointer;
     }
 
-    /* Tira informativa compacta similar a la ordenación solicitada */
+    /* Tira informativa compacta */
     .info-strip {
-      display: none; /* oculto por defecto; se mostrará al conectar Discord */
+      display: none;
       width: 100%;
       max-width: 320px;
       gap: 8px;
@@ -448,31 +458,6 @@
       white-space: nowrap;
     }
     .info-strip.visible { display: flex }
-
-    .mini-card {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      min-width: 0;
-    }
-
-    .mini-card .mini-avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 10px;
-      overflow: hidden;
-      flex-shrink: 0;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.35);
-    }
-
-    .mini-card .mini-avatar img { width: 100%; height: 100%; object-fit: cover; display:block }
-
-    .mini-card .mini-info {
-      display:flex;flex-direction:column;gap:4px;min-width:0;
-    }
-
-    .mini-title { color: rgba(255,255,255,0.92); font-weight:700; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
-    .mini-sub { color: rgba(209,213,219,0.72); font-size:12px }
 
     .connection-box::after {
       content: attr(data-tooltip);
@@ -515,14 +500,10 @@
       fill: currentColor;
     }
 
-    .view-count-badge {
-      display: none;
-    }
-
     /* ── Anillo del Avatar ── */
     #avatar-wrap {
       position: relative;
-      margin-bottom: 24px;
+      margin-bottom: 14px;
     }
     #avatar-ring {
       position: absolute;
@@ -565,47 +546,21 @@
       max-width: 300px;
       height: 1px;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      margin: 0 auto 24px;
+      margin: 0 auto 16px;
     }
 
     .section-title {
       color: rgba(255,255,255,0.85);
+      font-family: 'Demonized Font', 'Inter', system-ui, sans-serif;
+      font-weight: 400;
       font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.25em;
+      text-transform: none;
+      letter-spacing: 0.05em;
       margin-bottom: 14px;
       opacity: 0.9;
     }
 
-    /* ── Botón Portafolio ── */
-    #go-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 9px;
-      width: 100%;
-      padding: 14px 22px;
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.1);
-      color: #fff;
-      font-size: 14px;
-      font-weight: 700;
-      text-decoration: none;
-      border: 1px solid rgba(255,255,255,0.2);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
-      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-      letter-spacing: 0.02em;
-      cursor: pointer;
-      backdrop-filter: blur(10px);
-    }
-    #go-btn:hover {
-      transform: translateY(-3px);
-      background: rgba(255, 255, 255, 0.15);
-      box-shadow: 0 12px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3);
-      border-color: rgba(255, 255, 255, 0.3);
-    }
-
-    /* ── Interfaz del Control de Música ── */
+    /* ── Interfaz del Control de Música Superior ── */
     #music-container {
       position: fixed;
       top: 24px;
@@ -701,22 +656,19 @@
       to   { opacity: 1; transform: translateY(0) scale(1); }
     }
     @keyframes pulseRose {
-      0%, 100% { transform: scale(1); opacity: 0.3; }
-      50% { transform: scale(1.06); opacity: 0.65; }
+      0%, 100% { transform: scale(1); opacity: 0.4; }
+      50% { transform: scale(1.08); opacity: 0.95; }
     }
   </style>
 </head>
 <body>
 
   <div id="welcome-overlay">
-    <img id="welcome-rose" src="https://media.discordapp.net/attachments/1502878615841406986/1508989850232160357/rose.png" alt="Rosa de Bienvenida" />
-    <button id="welcome-btn">Descubrir</button>
-    <p id="welcome-caption">Haz clic para entrar y reproducir música</p>
+    <img id="welcome-rose-loading" src="white-flower.png" alt="Cargando..." />
   </div>
 
-  <audio id="bg-music" loop>
-    <source src="WUF.mp3" type="audio/mpeg">
-  </audio>
+  <audio id="bg-music" loop></audio>
+  <video id="bg-video" preload="none" muted playsinline loop></video>
 
   <div id="music-container">
     <button id="music-toggle" aria-label="Reproducir música">
@@ -762,7 +714,7 @@
             </div>
             <div id="profile-info">
               <p id="profile-name" data-original-name="Prince">Prince</p>
-              <div class="info-strip" id="discord-strip" aria-hidden="true"><!-- visible only after Discord connect --></div>
+              <div class="info-strip" id="discord-strip" aria-hidden="true"></div>
             </div>
             <div id="discord-activity">
               <button id="discord-connect">Conectar</button>
@@ -771,27 +723,27 @@
         </div>
 
         <div class="card-right">
-          <p class="section-title">Conexiones</p>
+          <p class="section-title">凹</p>
           <div id="divider"></div>
 
           <div id="connections-row">
             <a class="connection-box" href="https://discord.com/users/1501775899971031190" target="_blank" rel="noreferrer" title="Discord" data-tooltip="Discord">
-              <img src="../icons/Discord.png" alt="Discord icon">
+              <img src="https://raw.githubusercontent.com/Cooprince593/cart/main/icons/Discord.png" alt="Discord icon">
             </a>
             <a class="connection-box" href="https://www.roblox.com/es/users/275936594/profile" target="_blank" rel="noreferrer" title="Roblox" data-tooltip="Roblox">
-              <img src="../icons/Roblox.png" alt="Roblox icon">
+              <img src="https://raw.githubusercontent.com/Cooprince593/cart/main/icons/Roblox.png" alt="Roblox icon">
             </a>
             <a class="connection-box" href="https://steamcommunity.com/profiles/76561199447485191/" target="_blank" rel="noreferrer" title="Steam" data-tooltip="Steam">
-              <img src="../icons/Steam.png" alt="Steam icon">
+              <img src="https://raw.githubusercontent.com/Cooprince593/cart/main/icons/Steam.png" alt="Steam icon">
             </a>
             <button class="connection-box" id="view-count-btn" type="button" title="Visitas" data-tooltip="Visitas">
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 4.5C7.3 4.5 3.2 7.1 1.5 11.3c1.7 4.2 5.8 6.8 10.5 6.8s8.8-2.6 10.5-6.8C20.8 7.1 16.7 4.5 12 4.5zm0 11c-2.4 0-4.3-1.9-4.3-4.3S9.6 7 12 7s4.3 1.9 4.3 4.3S14.4 15.5 12 15.5zm0-6.5c-1.2 0-2.2 1-2.2 2.2S10.8 13.4 12 13.4s2.2-1 2.2-2.2S13.2 9 12 9z"/></svg>
-              <span class="view-count-badge" id="view-count-badge"></span>
+              <img src="https://raw.githubusercontent.com/Cooprince593/cart/main/icons/white-flower.png" alt="Visitas icon">
             </button>
           </div>
+          
           <div class="music-control-panel">
             <div class="music-button-row">
-                  <button class="music-action" id="music-prev" type="button" aria-label="Anterior canción">
+              <button class="music-action" id="music-prev" type="button" aria-label="Anterior canción">
                 <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15 18V6l-8 6 8 6zM5 6h2v12H5V6z"/></svg>
               </button>
               <button class="music-action" id="music-playpause" type="button" aria-label="Reproducir/Pausar">
@@ -810,7 +762,7 @@
   </div>
 
   <script>
-    // ─── Control de Audio Inteligente con Pantalla de Entrada ───
+    // ─── Control de Audio Inteligente y Aleatorio ───
     (function () {
       const bgMusic = document.getElementById('bg-music');
       const musicBtn = document.getElementById('music-toggle');
@@ -818,6 +770,14 @@
       const iconMuted = document.getElementById('icon-muted');
       const iconPlaying = document.getElementById('icon-playing');
       const welcomeOverlay = document.getElementById('welcome-overlay');
+
+      // Lista de canciones para reproducción aleatoria.
+      // Modifica o añade aquí los nombres exactos de tus archivos de música
+      const playlist = ['WUF.mp3', 'music1.mp3', 'music2.mp3', 'music3.mp3'];
+      
+      // Selección de canción aleatoria al cargar la página
+      const randomTrack = playlist[Math.floor(Math.random() * playlist.length)];
+      bgMusic.src = randomTrack;
 
       bgMusic.volume = volumeSlider.value;
 
@@ -836,9 +796,23 @@
       bgMusic.addEventListener('volumechange', updateIcons);
 
       welcomeOverlay.addEventListener('click', () => {
-        bgMusic.play().catch(err => console.log("Error al reproducir:", err));
+        const bgVideo = document.getElementById('bg-video');
+        if (bgVideo && !bgVideo.src) {
+          bgVideo.src = 'https://raw.githubusercontent.com/Cooprince593/Space/main/Chromatic%20Perlin%20Noise%20%20Generative%20Motion%20Design%20(online-video-cutter.com).mp4';
+          bgVideo.load();
+          bgVideo.play().catch(err => console.log('Error al reproducir video:', err));
+          bgVideo.classList.add('visible');
+        }
+        bgMusic.play().catch(err => console.log("Error al reproducir música:", err));
         welcomeOverlay.classList.add('fade-out');
         updateIcons();
+        
+        const centerEl = document.getElementById('center');
+        if (centerEl) {
+          setTimeout(() => {
+            centerEl.classList.add('card-visible');
+          }, 650);
+        }
       });
 
       musicBtn.addEventListener('click', (e) => {
@@ -920,7 +894,6 @@
       if (!discordConnect) return;
 
       discordConnect.addEventListener('click', () => {
-        // Placeholder flow: show info-strip when user confirms connection
         const confirmConnect = confirm('Simular conexión a Discord en esta página de demostración?');
         if (!confirmConnect) {
           alert('Para conectar Discord correctamente se necesita una integración con OAuth o backend.');
@@ -952,10 +925,6 @@
         localStorage.setItem(key, String(value));
       }
 
-      function getCountText(count) {
-        return `${count} visita${count === 1 ? '' : 's'}`;
-      }
-
       if (viewCountBtn && profileName) {
         const alreadyViewed = localStorage.getItem(viewedKey) === 'true';
         if (!alreadyViewed) {
@@ -976,7 +945,6 @@
           viewCountBtn.dataset.tooltip = currentTooltip;
           viewCountBtn.title = currentTooltip;
           viewCountBtn.setAttribute('aria-label', currentTooltip);
-          alert(`Esta página ya ha sido vista en este navegador ${currentCount} veces.`);
         });
       }
     })();
