@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>凹</title>
-  <link rel="icon" type="image/png" href="white-flower.png" />
+  <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/Cooprince593/cart/main/icons/white-flower.png" />
   
   <style>
     /* ── Rutas de fuente Demonized asegurada ── */
@@ -39,20 +39,21 @@
       position: relative;
     }
 
-    /* ── Fondo de imagen dinámico (Inicia nítido, pasa a blur) ── */
-    body::before {
-      content: "";
+    /* ── Fondo de Video Dinámico ── */
+    #bg-video {
       position: fixed;
-      top: -15px; left: -15px; right: -15px; bottom: -15px;
-      background: url('wrf.png') no-repeat center center/cover;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
       z-index: -1;
       pointer-events: none;
       filter: blur(0px);
       transition: filter 0.8s ease-in-out;
     }
 
-    /* Clase que aplica el blur del 5% */
-    body.is-blurred::before {
+    /* Clase que aplica el blur del 5% al video cuando se entra a la página */
+    body.is-blurred #bg-video {
       filter: blur(5px);
     }
 
@@ -125,7 +126,7 @@
       position: relative;
     }
 
-    /* ── Tarjeta (Hecha un poco más alta) ── */
+    /* ── Tarjeta ── */
     #card {
       border-radius: 24px;
       background: rgba(255, 255, 255, 0.07);
@@ -133,12 +134,11 @@
       -webkit-backdrop-filter: blur(40px) saturate(180%);
       border: 1px solid rgba(255, 255, 255, 0.15);
       box-shadow: 0 24px 60px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255, 255, 255, 0.15);
-      /* Aumentamos el padding vertical y le damos min-height para que sea más alta */
       padding: 38px 30px; 
       min-height: 290px;
       display: flex;
       flex-direction: row;
-      align-items: center; /* Alineación centrada para que se vea balanceada con la nueva altura */
+      align-items: center;
       gap: 28px;
       overflow: hidden;
       position: relative;
@@ -186,8 +186,9 @@
       white-space: nowrap;
     }
 
+    /* Alineación centrada tras quitar el título 凹 */
     .card-right {
-      display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
       flex: 1; min-width: 0; position: relative; z-index: 1; padding-left: 14px; padding-right: 4px; padding-top: 4px;
     }
 
@@ -198,10 +199,12 @@
 
     #discord-activity { margin-top: 12px; text-align: center; }
 
+    /* Estilos adaptados para la etiqueta <a> del OAuth */
     #discord-connect {
       margin-top: 6px; padding: 10px 16px; border-radius: 999px; font-family: inherit;
       border: 1px solid rgba(255,255,255,0.16); background: rgba(255,255,255,0.08);
       color: #fff; cursor: pointer; transition: all 0.25s ease; backdrop-filter: blur(10px);
+      text-decoration: none; display: inline-block;
     }
     #discord-connect:hover { background: rgba(255,255,255,0.16); transform: translateY(-1px); }
 
@@ -220,11 +223,13 @@
     .connection-box:hover { background: rgba(255, 255, 255, 0.08); color: #fff; transform: translateY(-3px); }
     .connection-box svg, .connection-box img { width: 20px; height: 20px; object-fit: contain; }
 
+    /* Fuente Demonized Font añadida a los carteles flotantes (tooltips) */
     .connection-box::after {
       content: attr(data-tooltip); position: absolute; top: -32px; left: 50%;
       transform: translateX(-50%) scale(0.95); color: #fff; background: rgba(0,0,0,0.75);
       padding: 5px 10px; border-radius: 999px; font-size: 11px; opacity: 0; pointer-events: none;
-      transition: opacity 0.2s ease, transform 0.2s ease; z-index: 10; font-family: 'Inter', sans-serif !important;
+      transition: opacity 0.2s ease, transform 0.2s ease; z-index: 10; 
+      font-family: 'Demonized Font', system-ui, sans-serif !important;
     }
     .connection-box:hover::after { opacity: 1; transform: translateX(-50%) scale(1); }
 
@@ -247,7 +252,7 @@
       appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #fff; cursor: pointer;
     }
 
-    /* ── Anillo del Avatar Corregido ── */
+    /* ── Anillo del Avatar ── */
     #avatar-wrap { 
       position: relative; 
       margin-bottom: 14px;
@@ -292,9 +297,6 @@
       z-index: 3; 
     }
 
-    #divider { width: 80%; max-width: 300px; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); margin: 0 auto 16px; }
-    .section-title { color: rgba(255,255,255,0.85); font-size: 20px; margin-bottom: 14px; text-transform: none; }
-
     /* ── Control de Música Superior ── */
     #music-container {
       position: fixed; top: 24px; left: 24px; display: flex; align-items: center;
@@ -328,8 +330,12 @@
 </head>
 <body>
 
+  <video id="bg-video" loop playsinline>
+    <source src="https://raw.githubusercontent.com/Cooprince593/cart/main/wtf.mp4" type="video/mp4">
+  </video>
+
   <div id="welcome-overlay">
-    <img id="welcome-rose-loading" src="white-flower.png" alt="Cargando..." />
+    <img id="welcome-rose-loading" src="https://raw.githubusercontent.com/Cooprince593/cart/main/icons/white-flower.png" alt="Cargando..." />
   </div>
 
   <audio id="bg-music" crossorigin="anonymous"></audio>
@@ -371,15 +377,13 @@
               <p id="profile-name">Prince</p>
             </div>
             <div id="discord-activity">
-              <button id="discord-connect">Conectar</button>
+              <a id="discord-connect" href="https://b568f68c-e843-40fd-a5c7-b70f0d3cdfd0-00-28p9k16frwf0j.janeway.replit.dev/api/auth/discord/callback">Conectar</a>
             </div>
           </div>
         </div>
 
         <div class="card-right">
-          <p class="section-title">凹</p>
-          <div id="divider"></div>
-
+          
           <div id="connections-row">
             <a class="connection-box" href="https://discord.com/users/1501775899971031190" target="_blank" data-tooltip="Discord">
               <img src="https://raw.githubusercontent.com/Cooprince593/cart/main/icons/Discord.png" alt="Discord">
@@ -390,8 +394,8 @@
             <a class="connection-box" href="https://steamcommunity.com/profiles/76561199447485191/" target="_blank" data-tooltip="Steam">
               <img src="https://raw.githubusercontent.com/Cooprince593/cart/main/icons/Steam.png" alt="Steam">
             </a>
-            <button class="connection-box" id="view-count-btn" type="button" data-tooltip="Visitas">
-              <img src="https://raw.githubusercontent.com/Cooprince593/cart/main/white-flower.png" alt="Visitas">
+            <button class="connection-box" id="view-count-btn" type="button" data-tooltip="Cargando...">
+              <img src="https://raw.githubusercontent.com/Cooprince593/cart/main/icons/white-flower.png" alt="Visitas">
             </button>
           </div>
           
@@ -419,6 +423,7 @@
     // ─── CEREBRO DE MÚSICA CON LA API DE GITHUB ───
     (function () {
       const bgMusic = document.getElementById('bg-music');
+      const bgVideo = document.getElementById('bg-video');
       const musicBtn = document.getElementById('music-toggle');
       const volumeSlider = document.getElementById('volume-slider');
       const iconMuted = document.getElementById('icon-muted');
@@ -428,7 +433,6 @@
       let currentPlaylist = [];
       let currentTrackIndex = 0;
 
-      // 1. Conectando a tu repositorio de GitHub para leer la carpeta "music"
       fetch('https://api.github.com/repos/Cooprince593/cart/contents/music')
         .then(response => {
           if (!response.ok) throw new Error("No se pudo conectar con la API de Github");
@@ -436,14 +440,12 @@
         })
         .then(data => {
           if(Array.isArray(data)) {
-            // Extraer solo archivos de audio (.mp3)
             currentPlaylist = data.filter(file => file.name.endsWith('.mp3'));
             
             if (currentPlaylist.length > 0) {
-              // Elegir una canción al azar de tu GitHub y prepararla
               currentTrackIndex = Math.floor(Math.random() * currentPlaylist.length);
               bgMusic.src = currentPlaylist[currentTrackIndex].download_url;
-              bgMusic.load(); // Fuerza la carga inicial de la música
+              bgMusic.load(); 
             }
           }
         })
@@ -465,12 +467,13 @@
       bgMusic.addEventListener('pause', updateIcons);
       bgMusic.addEventListener('volumechange', updateIcons);
 
-      // Desaparece la pantalla inicial al dar clic Y activa el Blur
       welcomeOverlay.addEventListener('click', () => {
-        // Aplica el blur al fondo
         document.body.classList.add('is-blurred');
 
-        // Intentar reproducir música
+        if (bgVideo) {
+          bgVideo.play().catch(err => console.log("Video no pudo reproducirse automáticamente:", err));
+        }
+
         bgMusic.play().catch(err => console.log("El navegador bloqueó o aún está cargando la música:", err));
         
         welcomeOverlay.classList.add('fade-out');
@@ -510,7 +513,6 @@
         bgMusic.addEventListener('play', refreshMusicButton);
         bgMusic.addEventListener('pause', refreshMusicButton);
         
-        // Cuando termine la canción, pasar a otra de forma automática
         bgMusic.addEventListener('ended', () => {
            if(currentPlaylist.length > 0) {
              currentTrackIndex = Math.floor(Math.random() * currentPlaylist.length);
@@ -534,7 +536,6 @@
         });
       }
 
-      // Botón Siguiente: Elige otra canción al azar
       if (musicNext) {
         musicNext.addEventListener('click', () => {
           if (currentPlaylist.length > 0) {
@@ -545,7 +546,6 @@
         });
       }
 
-      // Botón Anterior: Reinicia la canción
       if (musicPrev) {
         musicPrev.addEventListener('click', () => {
           bgMusic.currentTime = 0;
@@ -576,6 +576,37 @@
         cancelAnimationFrame(raf);
         card.style.transform  = 'rotateX(0deg) rotateY(0deg) scale(1)';
       });
+    })();
+
+    // ─── SCRIPT DEL CONTADOR DE VISITAS ÚNICAS (NUEVO) ───
+    (function () {
+      const viewBtn = document.getElementById('view-count-btn');
+      if (!viewBtn) return;
+
+      // Revisa en la memoria del navegador si ya visitó la página
+      const hasVisited = localStorage.getItem('visited_cooprince593');
+      
+      // Si ya visitó, solo consultamos el número. Si es nuevo, usamos '/up' para sumar 1.
+      const apiUrl = hasVisited 
+        ? 'https://api.counterapi.dev/v1/cooprince593_cart/visitas' 
+        : 'https://api.counterapi.dev/v1/cooprince593_cart/visitas/up';
+
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          if (data && data.count !== undefined) {
+            viewBtn.setAttribute('data-tooltip', `Visitas: ${data.count}`);
+            
+            // Si es su primera visita, guardamos el recuerdo para que no vuelva a sumar al refrescar
+            if (!hasVisited) {
+              localStorage.setItem('visited_cooprince593', 'true');
+            }
+          }
+        })
+        .catch(err => {
+          console.error("Error al obtener visitas:", err);
+          viewBtn.setAttribute('data-tooltip', `Visitas: Error`);
+        });
     })();
   </script>
 </body>
