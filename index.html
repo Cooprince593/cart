@@ -10,7 +10,6 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
-    /* ── Rutas de fuente Demonized asegurada ── */
     @font-face {
       font-family: 'Demonized Font';
       src: url('https://raw.githubusercontent.com/Cooprince593/cart/main/Demonized.ttf') format('truetype'), 
@@ -20,7 +19,6 @@
       font-display: swap;
     }
 
-    /* ── Reset básico ── */
     *, *::before, *::after { 
       box-sizing: border-box; 
       margin: 0; 
@@ -41,28 +39,38 @@
       position: relative;
     }
 
-    /* ── Fondo de Video Dinámico Reparado ── */
+    /* ── Fondo de Video ── */
     #bg-video {
       position: fixed;
       top: 0; left: 0;
       width: 100vw;
       height: 100vh;
       object-fit: cover;
-      z-index: -1;
+      z-index: -2;
       pointer-events: none;
-      filter: blur(0px);
-      transition: filter 0.8s ease-in-out;
     }
 
-    body.is-blurred #bg-video {
-      filter: blur(5px);
+    #video-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: -1;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.8s ease-in-out;
+    }
+
+    body.is-blurred #video-overlay {
+      opacity: 1;
     }
 
     /* ── PANTALLA DE BIENVENIDA ── */
     #welcome-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.65);
+      background: rgba(0,0,0,0.85);
       z-index: 9999;
       display: flex;
       flex-direction: column;
@@ -85,7 +93,7 @@
       animation: pulseRose 2s infinite ease-in-out;
     }
 
-    /* ── Decoraciones (Rosas de fondo) ── */
+    /* ── Decoraciones ── */
     .rose-corner {
       position: fixed;
       width: 220px;
@@ -131,8 +139,8 @@
     #card {
       border-radius: 24px;
       background: rgba(255, 255, 255, 0.07);
-      backdrop-filter: blur(40px) saturate(180%);
-      -webkit-backdrop-filter: blur(40px) saturate(180%);
+      backdrop-filter: blur(25px) saturate(180%);
+      -webkit-backdrop-filter: blur(25px) saturate(180%);
       border: 1px solid rgba(255, 255, 255, 0.15);
       box-shadow: 0 24px 60px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255, 255, 255, 0.15);
       padding: 38px 30px; 
@@ -145,7 +153,7 @@
       position: relative;
       transform-style: preserve-3d;
       will-change: transform;
-      transition: transform 0.4s cubic-bezier(.03,.98,.52,.99), box-shadow 0.4s ease;
+      transition: transform 0.2s ease-out;
     }
 
     @media (max-width: 600px) {
@@ -154,35 +162,48 @@
       .card-right { padding-left: 0 !important; width: 100%; }
     }
 
-    #card::before {
-      content: ''; position: absolute; top: 0; left: 15%; right: 15%;
-      height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-      border-radius: 999px; pointer-events: none;
-    }
-
     .card-rose { position: absolute; width: 120px; opacity: 0.15; pointer-events: none; }
     .card-rose-tl { top: -18px; left: -22px; transform: rotate(-20deg); }
     .card-rose-br { bottom: -18px; right: -22px; transform: rotate(160deg); }
 
-    /* ── Columnas: Avatar Izquierda / Nombre Derecha ── */
+    /* ── Columna Izquierda: Avatar y Nombre ── */
     .card-left {
       display: flex; flex-direction: row; align-items: center; justify-content: center;
       position: relative; z-index: 1; min-width: 240px;
     }
 
-    #avatar-column { display: flex; flex-direction: row; align-items: center; gap: 18px; width: 100%; justify-content: center; }
+    #avatar-column { display: flex; flex-direction: row; align-items: center; gap: 24px; width: 100%; justify-content: center; }
     
-    #profile-info { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
+    #profile-info { display: flex; flex-direction: column; justify-content: center; align-items: center; }
+
+    /* Decoración de nombre con las flores */
+    .name-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .name-flower {
+      width: 26px;
+      height: 26px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 5px rgba(255,255,255,0.4));
+      animation: spin-slow 8s linear infinite;
+    }
+
+    .left-flower { animation-direction: reverse; }
 
     #profile-name {
       margin: 0;
       color: rgba(255,255,255,0.95);
-      font-size: 28px;
+      font-size: 32px;
       font-weight: 400;
       letter-spacing: 0.02em;
       white-space: nowrap;
+      text-shadow: 0 0 10px rgba(255,255,255,0.2);
     }
 
+    /* ── Columna Derecha: Redes y Música ── */
     .card-right {
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       flex: 1; min-width: 0; position: relative; z-index: 1; padding-left: 14px; padding-right: 4px; padding-top: 4px;
@@ -195,7 +216,7 @@
 
     #connections-row {
       display: flex; justify-content: center; flex-wrap: nowrap; gap: 16px;
-      width: 100%; max-width: 320px; margin-top: 14px; margin-bottom: 14px;
+      width: 100%; max-width: 320px; margin-bottom: 14px;
     }
 
     .connection-box {
@@ -235,44 +256,38 @@
       appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #fff; cursor: pointer;
     }
 
-    /* ── Anillo del Avatar ── */
+    /* ── Nuevo Efecto del Avatar (Borde Sólido + Pulso) ── */
     #avatar-wrap { 
       position: relative; 
-      width: 96px;
-      height: 96px;
+      width: 100px;
+      height: 100px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-    #avatar-ring {
-      position: absolute; 
-      top: -5px; bottom: -5px; left: -5px; right: -5px; 
-      border-radius: 50%;
-      background: conic-gradient(from 0deg, rgba(255,255,255,0.1), rgba(255,255,255,0.8), rgba(255,255,255,0.1));
-      animation: spin 4s linear infinite; 
-      filter: blur(1px);
-      z-index: 0;
-    }
-    #avatar-bg { 
-      position: absolute; 
-      top: -2px; bottom: -2px; left: -2px; right: -2px; 
-      border-radius: 50%; 
-      background: #080808; 
-      z-index: 1;
-    }
+    
     #avatar-img { 
-      width: 96px; 
-      height: 96px; 
+      width: 100%; 
+      height: 100%; 
       border-radius: 50%; 
       position: relative; 
       z-index: 2; 
       object-fit: cover; 
       display: block;
+      border: 3px solid rgba(255, 255, 255, 0.85);
+      animation: avatarPulse 2.5s infinite ease-in-out;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
+    
+    /* Animación al pasar el cursor (Hover) */
+    #avatar-wrap:hover #avatar-img {
+      transform: scale(1.08) rotate(3deg);
+    }
+
     #online-dot { 
       position: absolute; 
       bottom: 2px; right: 2px; 
-      width: 22px; height: 22px; 
+      width: 24px; height: 24px; 
       border-radius: 50%; 
       background: #23a559; 
       border: 3px solid #080808; 
@@ -294,7 +309,16 @@
     #music-container:hover #volume-slider { width: 85px; opacity: 1; margin-left: 10px; margin-right: 6px; pointer-events: auto; }
     #volume-slider::-webkit-slider-thumb { appearance: none; width: 12px; height: 12px; border-radius: 50%; background: #fff; }
 
-    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    /* Keyframes */
+    @keyframes spin-slow { 
+      from { transform: rotate(0deg); } 
+      to { transform: rotate(360deg); } 
+    }
+    @keyframes avatarPulse {
+      0% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); }
+      50% { box-shadow: 0 0 25px rgba(255, 255, 255, 0.6); }
+      100% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); }
+    }
     @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-12px); } }
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
     @keyframes pulseRose { 0%, 100% { transform: scale(1); opacity: 0.4; } 50% { transform: scale(1.08); opacity: 0.95; } }
@@ -305,6 +329,8 @@
   <video id="bg-video" loop playsinline>
     <source src="https://raw.githubusercontent.com/Cooprince593/cart/main/wtf.mp4" type="video/mp4">
   </video>
+  
+  <div id="video-overlay"></div>
 
   <div id="welcome-overlay">
     <img id="welcome-rose-loading" src="https://raw.githubusercontent.com/Cooprince593/cart/main/icons/white-flower.png" alt="Cargando..." />
@@ -333,13 +359,16 @@
         <div class="card-left">
           <div id="avatar-column">
             <div id="avatar-wrap">
-              <div id="avatar-ring"></div>
-              <div id="avatar-bg"></div>
               <img id="avatar-img" src="bruh.png" alt="Perfil" />
               <div id="online-dot"></div>
             </div>
+            
             <div id="profile-info">
-              <p id="profile-name">Prince</p>
+              <div class="name-container">
+                <img src="https://raw.githubusercontent.com/Cooprince593/cart/main/icons/white-flower.png" class="name-flower left-flower" alt="Flor Decorativa">
+                <p id="profile-name">Prince</p>
+                <img src="https://raw.githubusercontent.com/Cooprince593/cart/main/icons/white-flower.png" class="name-flower right-flower" alt="Flor Decorativa">
+              </div>
             </div>
           </div>
         </div>
@@ -356,9 +385,6 @@
             <a class="connection-box" href="https://steamcommunity.com/profiles/76561199447485191/" target="_blank" data-tooltip="Steam">
               <img src="https://raw.githubusercontent.com/Cooprince593/cart/main/icons/Steam.png" alt="Steam">
             </a>
-            <button class="connection-box" id="view-count-btn" type="button" data-tooltip="Cargando...">
-              <img src="https://raw.githubusercontent.com/Cooprince593/cart/main/icons/white-flower.png" alt="Visitas">
-            </button>
           </div>
           
           <div class="music-control-panel">
@@ -386,38 +412,10 @@
     // Inicializar Íconos de Lucide
     lucide.createIcons();
 
-    // ─── LÓGICA DEL CONTADOR DE VISITAS MEJORADA ───
-    (function () {
-      const viewBtn = document.getElementById('view-count-btn');
-      if (!viewBtn) return;
-
-      const hasVisited = localStorage.getItem('visited_cooprince_cart');
-      
-      const apiUrl = hasVisited 
-        ? 'https://api.counterapi.dev/v1/cooprince593-cart/visitas' 
-        : 'https://api.counterapi.dev/v1/cooprince593-cart/visitas/up';
-
-      fetch(apiUrl, { mode: 'cors' })
-        .then(response => {
-          if (!response.ok) throw new Error("Error en la respuesta del contador.");
-          return response.json();
-        })
-        .then(data => {
-          if (data && data.count !== undefined) {
-            viewBtn.setAttribute('data-tooltip', `Visitas: ${data.count}`);
-            if (!hasVisited) localStorage.setItem('visited_cooprince_cart', 'true');
-          }
-        })
-        .catch(err => {
-          console.warn("Contador bloqueado por el navegador (AdBlock o GitHub Pages CORS):", err);
-          viewBtn.setAttribute('data-tooltip', `Visitas: ?`);
-        });
-    })();
-
     // ─── CEREBRO DE MÚSICA CON LA API DE GITHUB ───
     (function () {
       const bgMusic = document.getElementById('bg-music');
-      const bgVideo = document.getElementById('bg-video'); // <-- Integración del video activada en el click
+      const bgVideo = document.getElementById('bg-video'); 
       const musicBtn = document.getElementById('music-toggle');
       const volumeSlider = document.getElementById('volume-slider');
       
@@ -432,10 +430,7 @@
       let currentTrackIndex = 0;
 
       fetch('https://api.github.com/repos/Cooprince593/cart/contents/music')
-        .then(response => {
-          if (!response.ok) throw new Error("No se pudo conectar con la API de Github");
-          return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
           if(Array.isArray(data)) {
             currentPlaylist = data.filter(file => file.name.endsWith('.mp3'));
@@ -477,7 +472,6 @@
       welcomeOverlay.addEventListener('click', () => {
         document.body.classList.add('is-blurred');
         
-        // Reproducir video al hacer clic
         if (bgVideo) {
           bgVideo.play().catch(err => console.log("Video no pudo reproducirse automáticamente:", err));
         }
@@ -558,8 +552,13 @@
       const card = document.getElementById('card');
       const MAX  = 12;
       let raf;
+      let lastTime = 0;
 
       wrap.addEventListener('mousemove', e => {
+        const now = performance.now();
+        if (now - lastTime < 16) return;
+        lastTime = now;
+
         const rect = wrap.getBoundingClientRect();
         const rx = (-(e.clientY - (rect.top + rect.height / 2)) / (rect.height / 2)) * MAX;
         const ry = ((e.clientX - (rect.left + rect.width / 2)) / (rect.width / 2)) * MAX;
